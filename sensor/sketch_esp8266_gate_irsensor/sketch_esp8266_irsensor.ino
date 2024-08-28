@@ -3,26 +3,30 @@
 #include <PubSubClient.h>
 #include <stdio.h>
 
-#define IR 5
+#define IR1 5
+#define IR2 4
 
 const char* ssid = "Tang 2";      //Wifi connect
 const char* password = "bin12345";   //Password
-
 const char* mqtt_broker = "192.168.102.189"; // Change it
+
 const int mqtt_port = 1883;
-const char *mqtt_topic = "smartparking/infrared_sensor";
+const char *mqtt_ir1_topic = "smartparking/gate/ir_outside";
+const char *mqtt_ir2_topic = "smartparking/gate/ir_g";
 const char* mqtt_username = "fsb2024"; //User
 const char* mqtt_password = "12345678"; //Password
 
 WiFiClient espClient;
 PubSubClient mqtt_client(espClient);
 
-bool irData;
+bool ir1Data;
+bool ir2Data;
 
 void setup() {
     Serial.begin(9600);
     connectToWiFi();
-    pinMode(IR, INPUT);
+    pinMode(IR1, INPUT);
+    pinMode(IR2, INPUT);
     mqtt_client.setServer(mqtt_broker, mqtt_port);
     connectToMQTTBroker();
 }
@@ -43,9 +47,6 @@ void connectToMQTTBroker() {
         Serial.printf("Connecting to MQTT Broker as %s.....\n", client_id.c_str());
         if (mqtt_client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
             Serial.println("Connected to MQTT broker");
-            mqtt_client.subscribe(mqtt_topic);
-            // Publish message upon successful connection
-            mqtt_client.publish(mqtt_topic, "Connect successfully");
         } else {
             Serial.print("Failed to connect to MQTT broker, rc=");
             Serial.print(mqtt_client.state());
@@ -62,14 +63,23 @@ void loop() {
     mqtt_client.loop();
     
     // current signal
-    bool currentIRData = digitalRead(IR);
+    bool currentIR1Data = digitalRead(IR1);
+    bool currentIR2Data = digitalRead(IR2);
 
     // Publish whenver value has been changed
-    if(currentIRData != irData) {
+    if(currentIR1Data != ir1Data) {
       char message[1];
-      sprintf(message, "%d", irData);
-      mqtt_client.publish(mqtt_topic, message);
-      irData = currentIRData;
+      sprintf(message, "%d", ir1Data);
+      mqtt_client.publish(mqtt_ir1_topic, message);
+      ir1Data = currentIR1Data;
+    }
+
+    // Publish whenver value has been changed
+    if(currentIR2Data != ir2Data) {
+      char message[1];
+      sprintf(message, "%d", ir2Data);
+      mqtt_client.publish(mqtt_ir2_topic, message);
+      ir2Data = currentIR2Data;
     }
     delay(500);
 }
