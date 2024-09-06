@@ -6,10 +6,10 @@
 #include <string.h>
  #include <Servo.h>
 
-const char* ssid = "Tang 2";      //Wifi connect
-const char* password = "bin12345";   //Password
+const char* ssid = "FSB-201";      //Wifi connect
+const char* password = "123@123a";   //Password
 
-const char* mqtt_broker = "192.168.102.189"; // Change it
+const char* mqtt_broker = "192.168.1.69"; // Change it
 const int mqtt_port = 1883;
 const char *mqtt_topic = "smartparking/servo_sensor";
 const char* mqtt_username = "fsb2024"; //User
@@ -19,8 +19,8 @@ WiFiClient espClient;
 PubSubClient mqtt_client(espClient);
 
 char servoData = '0';
-int closeStateDegree = 0;
-int openStateDegree = 90;
+int closeStateDegree = 100;
+int openStateDegree = 0;
 Servo servo;
 
 void connectToWiFi();

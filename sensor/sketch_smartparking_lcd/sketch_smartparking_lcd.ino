@@ -3,10 +3,10 @@
 #include <PubSubClient.h>
 #include <LiquidCrystal_I2C.h>
 
-const char* ssid = "Tang 2";      //Wifi connect
-const char* password = "bin12345";   //Password
+const char* ssid = "FSB-201";      //Wifi connect
+const char* password = "123@123a";   //Password
 
-const char* mqtt_broker = "192.168.102.189"; // Change it
+const char* mqtt_broker = "192.168.1.69"; // Change it
 const int mqtt_port = 1883;
 const char *mqtt_topic = "smartparking/lcd_parking";
 const char* mqtt_username = "fsb2024"; //User
